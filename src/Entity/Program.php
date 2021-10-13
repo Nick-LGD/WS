@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProgramRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 /**
  * @ORM\Entity(repositoryClass=ProgramRepository::class)
  */
@@ -32,8 +33,8 @@ class Program
      */
     private $poster;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Category::class)
+   /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="programs")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;

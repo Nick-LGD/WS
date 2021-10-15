@@ -13,8 +13,8 @@ use Doctrine\Common\Collections\Collection;
 class Category
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -24,8 +24,24 @@ class Category
      */
     private $name;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     /**
-     * @ORM\OneToMany(targetEntity=Program::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Program", mappedBy="category")
      */
     private $programs;
 
@@ -42,9 +58,8 @@ class Category
         return $this->programs;
     }
 
-
     /**
-     * @param Program $program
+     * param Program $program
      * @return Category
      */
     public function addProgram(Program $program): self
@@ -53,7 +68,6 @@ class Category
             $this->programs[] = $program;
             $program->setCategory($this);
         }
-
         return $this;
     }
 
@@ -61,34 +75,16 @@ class Category
      * @param Program $program
      * @return Category
      */
+
     public function removeProgram(Program $program): self
     {
-        if ($this->programs->removeElement($program)) {
+        if ($this->programs->contains($program)) {
+            $this->programs->removeElement($program);
             // set the owning side to null (unless already changed)
             if ($program->getCategory() === $this) {
                 $program->setCategory(null);
             }
         }
-
-        return $this;
-    }
-
-
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
         return $this;
     }
 }

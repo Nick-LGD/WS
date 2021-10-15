@@ -20,6 +20,11 @@ class Season
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Program::class, inversedBy="seasons")
+     */
+    private $program;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $number;
@@ -34,9 +39,8 @@ class Season
      */
     private $description;
 
-
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Episode", mappedBy="season")
+     * @ORM\OneToMany(targetEntity=Episode::class, mappedBy="season")
      */
     private $episodes;
 
@@ -45,56 +49,21 @@ class Season
         $this->episodes = new ArrayCollection();
     }
 
-    /**
-     * @return Collection|Episode[]
-     */
-    public function getEpisodes(): Collection
-    {
-        return $this->episodes;
-    }
-
-    /**
-     * @param Episode $episode
-     * @return Season
-     */
-    public function addEpisode(Episode $episode): self
-    {
-        if (!$this->episodes->contains($episode)) {
-            $this->episodes[] = $episode;
-            $episode->setSeason($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Episode $episode
-     * @return Season
-     */
-
-    public function removeEpisode(Episode $episode): self
-    {
-        if ($this->episodes->contains($episode)) {
-            $this->episodes->removeElement($episode);
-            // set the owning side to null (unless already changed)
-            if ($episode->getSeason() === $this) {
-                $episode->setSeason(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Program::class, inversedBy="season")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $program;
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getProgram(): ?Program
+    {
+        return $this->program;
+    }
+
+    public function setProgram(?Program $program): self
+    {
+        $this->program = $program;
+
+        return $this;
     }
 
     public function getNumber(): ?int
@@ -133,16 +102,43 @@ class Season
         return $this;
     }
 
-    public function getProgram(): ?Program
+    /**
+     * @return Collection|Episode[]
+     */
+    public function getEpisodes(): Collection
     {
-        return $this->program;
+        return $this->episodes;
     }
 
-    public function setProgram(?Program $program): self
+    /**
+     * param Episode $episode
+     * @return Season
+     */
+    public function addEpisode(Episode $episode): self
     {
-        $this->program = $program;
+
+        if (!$this->episodes->contains($episode)) {
+            $this->episodes[] = $episode;
+            $episode->setSeason($this);
+        }
 
         return $this;
     }
 
+    /**
+     * @param Episode $episode
+     * @return Season
+     */
+    public function removeEpisode(Episode $episode): self
+    {
+        if ($this->episodes->contains($episode)) {
+            $this->episodes->removeElement($episode);
+            // set the owning side to null (unless already changed)
+            if ($episode->getSeason() === $this) {
+                $episode->setSeason(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\EpisodeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +18,13 @@ class Episode
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Season::class, inversedBy="episodes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $season;
+
+    /**
+     * @ORM\Column(type="string", length=60)
      */
     private $title;
 
@@ -34,21 +38,21 @@ class Episode
      */
     private $synopsis;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Season::class, inversedBy="episode")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $season;
-
-
-    public function __construct()
-    {
-        $this->comments = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSeason(): ?Season
+    {
+        return $this->season;
+    }
+
+    public function setSeason(?Season $season): self
+    {
+        $this->season = $season;
+
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -83,18 +87,6 @@ class Episode
     public function setSynopsis(string $synopsis): self
     {
         $this->synopsis = $synopsis;
-
-        return $this;
-    }
-
-    public function getSeason(): ?Season
-    {
-        return $this->season;
-    }
-
-    public function setSeason(?Season $season): self
-    {
-        $this->season = $season;
 
         return $this;
     }

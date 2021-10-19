@@ -44,7 +44,7 @@ class ProgramController extends AbstractController
     {
         $episodes = $season->getEpisodes();
         $program = $season->getProgram();
-        return $this->render('wild/season.html.twig', [
+        return $this->render('', [
             'season' => $season,
             'program' => $program,
             'episodes' => $episodes,

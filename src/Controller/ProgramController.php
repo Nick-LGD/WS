@@ -38,4 +38,17 @@ class ProgramController extends AbstractController
         'program' => $program,
     ]);
     }
+
+    #[Route('/program/{programId}/seasons/{seasonId}', methods:['GET'] , name: 'program_show')]
+    public function showSeason(Season $season): Response
+    {
+        $episodes = $season->getEpisodes();
+        $program = $season->getProgram();
+        return $this->render('', [
+            'season' => $season,
+            'program' => $program,
+            'episodes' => $episodes,
+        ]);
+    }
+
 }
